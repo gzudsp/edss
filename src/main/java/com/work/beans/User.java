@@ -1,6 +1,8 @@
 package com.work.beans;
 
-public class User {
+import org.apache.http.NameValuePair;
+
+public class User implements NameValuePair{
 	private Integer id;
 	private String name;
 	private String description;
@@ -20,8 +22,19 @@ public class User {
 	public String getDescription() {
 		return description;
 	}
+	public User(Integer id, String name, String description, String tokenId) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.tokenId = tokenId;
+	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public User() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	public String getTokenId() {
 		return tokenId;
@@ -33,6 +46,13 @@ public class User {
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", description=" + description + ", tokenId=" + tokenId + "]";
 	}
-	
+	@Override
+	public String getValue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void method(){
+		
+	}
 	
 }
