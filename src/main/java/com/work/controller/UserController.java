@@ -51,11 +51,11 @@ public class UserController {
 		String tokenId = user.getTokenId();
 		String filename = uploadFile.getOriginalFilename();
 		System.out.println("desc="+description+",name="+name+",tokenId="+tokenId);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date date = new Date();
 		String formatTime = sdf.format(date);
 		//${sss}/user/服务器系统日期/zip
-		String path = "D://"+name+"//"+formatTime+"//"+filename;
+		String path = "D:\\"+name+"\\"+formatTime+"\\"+filename;
 		System.out.println(path);
 		File file = new File(path);
 		System.out.println(file.getAbsolutePath());
@@ -75,6 +75,7 @@ public class UserController {
 				}
 				try {
 					uploadFile.transferTo(file);
+					insertData(file,name);
 					ms.setInfo("success");
 					ms.setStatus("true");
 					model.addAttribute("status", "true");
@@ -100,16 +101,57 @@ public class UserController {
 	public Message writeDataToDB(String path) {
 		Message ms = new Message();
 		MyFileReader2 rcf = new MyFileReader2();
-		path = "";
+		path = "C:/Users/lenovo/Desktop/committee_info.zip";
+		String descDir = "A:/测试/";
 		try {
-			List<String> files = UnZipFile.unZipFiles(new File(path), "A:/zip/");
+			//解压文件
+			List<String> files = UnZipFile.unZipFiles(new File(path), descDir);
+			//获取解压的第一个文件
 			String file = files.get(0);
-			Map map = rcf.readFile(file);
+			System.out.println(files);
+			//读取txt文件,返回文件信息
+			Map map = rcf.readFile(new File(file));
+			//表名
 			String tabName = (String) map.get("tabName");
+			//列集合
 			String[] clumes = (String[]) map.get("clumes");
+			//数据值
 			List<String[]> list = (List<String[]>) map.get("list");
 			//删除,创建临时表
 			String newTab = rcf.checkDBTable(tabName,clumes,"userId");
+			System.out.println(newTab);
+			//向新表插入新数据
+			rcf.insertCustInfo(list,clumes,newTab);
+			ms.setInfo("success");
+			ms.setStatus("true");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return ms;
+	}
+	
+	public Message insertData(File zipFile,String userName){
+		MyFileReader2 rcf = new MyFileReader2();
+		Message ms = new Message();
+		//path = "C:/Users/lenovo/Desktop/committee_info.zip";
+		String descDir = "A:/测试/";
+		try {
+			//解压文件
+			//List<String> files = UnZipFile.unZipFiles(new File(path), descDir);
+			List<String> files = UnZipFile.unZipFiles(zipFile, descDir);
+			//获取解压的第一个文件
+			String file = files.get(0);
+			System.out.println(files);
+			//读取txt文件,返回文件信息
+			Map map = rcf.readFile(new File(file));
+			//表名
+			String tabName = (String) map.get("tabName");
+			//列集合
+			String[] clumes = (String[]) map.get("clumes");
+			//数据值
+			List<String[]> list = (List<String[]>) map.get("list");
+			//删除,创建临时表
+			String newTab = rcf.checkDBTable(tabName,clumes,userName);
 			System.out.println(newTab);
 			//向新表插入新数据
 			rcf.insertCustInfo(list,clumes,newTab);
@@ -135,7 +177,7 @@ public class UserController {
 			//解压文件
 			String unZipFile = rcf.unZipFiles(new File(srcFile), descFile);
 			//读取解压文件获取表明,列名
-			Map map = rcf.readFile(unZipFile);
+			Map map = rcf.readFile(new File(unZipFile));
 			String tabName = (String) map.get("tabName");
 			System.out.println(tabName);
 			String[] clumes = (String[]) map.get("clumes");
