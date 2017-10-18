@@ -54,8 +54,8 @@ public class MyFileReader2 {
 	 * 读文件并插入数据
 	 * @param path
 	 */
-	public static Map readFile(String filePath) {
-		String read = TextFile.read(filePath);
+	public static Map readFile(File file) {
+		String read = TextFile.read(file);
 		String[] lines = read.split("\n");
 		String tabName = lines[0];
 		String[] clumes = lines[1].split("\\|");
