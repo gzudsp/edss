@@ -16,11 +16,10 @@ public class TextFile extends ArrayList<String>{
 	private static final long serialVersionUID = -8611548278759606004L;
 
 	//read a file as a single string  
-    public static String read(String fileName){  
+    public static String read(File file){  
         StringBuilder sb = new StringBuilder();  
         try{  
-            BufferedReader in = new BufferedReader( new FileReader(  
-                            new File(fileName).getAbsoluteFile()));  
+            BufferedReader in = new BufferedReader( new FileReader(file.getAbsoluteFile()));  
             try{  
                 String s;  
                 while((s=in.readLine()) != null){  

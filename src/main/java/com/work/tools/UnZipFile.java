@@ -48,7 +48,8 @@ public class UnZipFile {
 			// System.out.println(outPath);
 
 			FileOutputStream out = new FileOutputStream(outPath);
-			
+			System.out.println(outPath);
+			list.add(outPath);
 			byte[] buf1 = new byte[1024];
 			int len;
 			while ((len = in.read(buf1)) > 0) {
@@ -56,9 +57,9 @@ public class UnZipFile {
 			}
 			in.close();
 			out.close();
-			list.add(descDir+zipEntryName);
 		}
 		System.out.println("******************解压完毕********************");
+		
 		return list;
 	}
 }
