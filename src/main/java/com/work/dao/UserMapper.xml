@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <p> ©2017- Copyright By www.longruan.com All Rights Reserved </p> account模块对应的数据库访问配置文件 
+	since 2017-04-13 18:13 author syf -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.work.dao.UserMapper">
+	<select id="findUserByToKenId" parameterType="String" resultType="com.work.beans.User">
+		select * from user where tokenId = #{tokenId}
+	</select>
+</mapper>
