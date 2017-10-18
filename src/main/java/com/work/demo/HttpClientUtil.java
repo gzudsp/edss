@@ -47,8 +47,8 @@ public class HttpClientUtil {
 		map.put("url", "http://127.0.0.1:8080/ssm/testUpload");
 		String localFile = "C:/Users/lenovo/Desktop/committee_info.zip";
 		// HttpClientUtil.PostMethod(localFile, map);
-		HttpClientUtil.HttpMethod(localFile, map);
-		//HttpClientUtil.httpPost("http://127.0.0.1:8080/ssm/testUpload", localFile, map);
+		//HttpClientUtil.HttpMethod1(localFile, map);
+		HttpClientUtil.httpPost("http://127.0.0.1:8080/ssm/testUpload", localFile, map);
 		
 	}
 
@@ -109,7 +109,7 @@ public class HttpClientUtil {
 		HttpClient httpclient1 = new DefaultHttpClient();
 		try {
 			HttpPost httppost = new HttpPost(map.get("url"));
-			httppost.setProtocolVersion(new ProtocolVersion("HTTP", 2, 1));
+			//httppost.setProtocolVersion(new ProtocolVersion("HTTP", 2, 1));
 			FileBody bin = new FileBody(new File(url));
 			StringBody comment = new StringBody(map.get("name"), Consts.UTF_8);
 			StringBody desc = new StringBody(map.get("description"));
@@ -273,28 +273,89 @@ public class HttpClientUtil {
 	
 	public static void httpPost(String url,String filepath,Map<String, String> map) {
 		
-		//CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		//CloseableHttpClient httpClient = HttpClients.createDefault();
-		DefaultHttpClient httpClient = new DefaultHttpClient();
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		//CloseableHttpClient httpClient1 = HttpClients.createDefault();
+		//DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpPost post = new HttpPost(url);
 		MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
 		//添加文件
 		entityBuilder.addPart("uploadFile",new FileBody(new File(filepath)));
 		//添加字段
 		for (String key : map.keySet()) {
-			entityBuilder.addPart(key,new StringBody(map.get(key),ContentType.create("http/text", Consts.UTF_8)));
+			StringBody body = new StringBody(map.get(key),ContentType.create("http/text", Consts.UTF_8));
+			entityBuilder.addPart(key,body);
 		}
 		try {
+			HttpEntity build = entityBuilder.build();
+			post.setEntity(build);
 			CloseableHttpResponse response = httpClient.execute(post);
 			StatusLine statusLine = response.getStatusLine();
 			HttpEntity entity = response.getEntity();
 			System.out.println(statusLine);
+			System.out.println("-----");
+			System.out.println(EntityUtils.toString(entity));
+			System.out.println(entity.getContent());
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally {
-			httpClient.close();
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		
+	}
+	public static void HttpMethod1(String url, Map<String, String> map) {
+		HttpClient httpclient = new DefaultHttpClient();
+		try {
+			HttpPost httppost = new HttpPost(map.get("url"));
+			//httppost.setProtocolVersion(new ProtocolVersion("HTTP", 2, 1));
+			FileBody fileBody = new FileBody(new File(url));
+			MultipartEntity reqEntity = new MultipartEntity();
+			reqEntity.addPart("uploadFile", fileBody);// file1为请求后台的File upload;属性
+			for (String key : map.keySet()) {
+				StringBody body = new StringBody(map.get(key),ContentType.create("http/text", Consts.UTF_8));
+				reqEntity.addPart(key, body);
+			}
+//			StringBody desc = new StringBody(map.get("description"));
+//			StringBody tokenId = new StringBody(map.get("tokenId"));
+//			reqEntity.addPart("name", comment);// filename1为请求后台的普通参数;属性
+//			reqEntity.addPart("description", desc);// filename1为请求后台的普通参数;属性
+//			reqEntity.addPart("tokenId", tokenId);// filename1为请求后台的普通参数;属性
+			httppost.setEntity(reqEntity);
+
+			HttpResponse response = httpclient.execute(httppost);
+
+			int statusCode = response.getStatusLine().getStatusCode();
+
+			if (statusCode == HttpStatus.SC_OK) {
+
+				System.out.println("服务器正常响应.....");
+
+				HttpEntity resEntity = response.getEntity();
+
+				System.out.println(EntityUtils.toString(resEntity));// httpclient自带的工具类读取返回数据
+
+				System.out.println(resEntity.getContent());
+
+				EntityUtils.consume(resEntity);
+			}
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				httpclient.getConnectionManager().shutdown();
+			} catch (Exception ignore) {
+
+			}
+		}
 		
 	}
 }
