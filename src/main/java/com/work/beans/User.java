@@ -52,7 +52,7 @@ public class User implements NameValuePair{
 		return null;
 	}
 	public void method(){
-		
+		System.out.println("");
 	}
 	
 }
