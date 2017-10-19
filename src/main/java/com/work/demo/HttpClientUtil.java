@@ -19,23 +19,24 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 public class HttpClientUtil {
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args)  {
 		Map<String, String> map = new HashMap<>();
 		map.put("name", "李四");
 		map.put("description", "12313");
 		map.put("tokenId", "123");
-		map.put("url", "http://127.0.0.1:8080/ssm/testUpload");
 		String localFile = "C:/Users/lenovo/Desktop/committee_info.zip";
-		// HttpClientUtil.PostMethod(localFile, map);
-		//HttpClientUtil.HttpMethod1(localFile, map);
 		HttpClientUtil.httpPost("http://127.0.0.1:8080/ssm/testUpload", localFile, map);
-		
 	}
 
 	public static CloseableHttpClient createDefault() {
 		return HttpClientBuilder.create().build();
 	}
-	
+	/**
+	 * 
+	 * @param url 主机地址
+	 * @param filepath 文件地址
+	 * @param map form参数
+	 */
 	public static void httpPost(String url,String filepath,Map<String, String> map) {
 		
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -44,11 +45,16 @@ public class HttpClientUtil {
 		HttpPost post = new HttpPost(url);
 		MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
 		//添加文件
-		entityBuilder.addPart("uploadFile",new FileBody(new File(filepath)));
+		File file = new File(filepath);
+		if(file.exists()){
+			entityBuilder.addPart("uploadFile",new FileBody(file));
+		}
 		//添加字段
-		for (String key : map.keySet()) {
-			StringBody body = new StringBody(map.get(key),ContentType.create("http/text", Consts.UTF_8));
-			entityBuilder.addPart(key,body);
+		if(map!=null){
+			for (String key : map.keySet()) {
+				StringBody body = new StringBody(map.get(key),ContentType.create("http/text", Consts.UTF_8));
+				entityBuilder.addPart(key,body);
+			}
 		}
 		try {
 			HttpEntity build = entityBuilder.build();
@@ -67,7 +73,6 @@ public class HttpClientUtil {
 			try {
 				httpClient.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
