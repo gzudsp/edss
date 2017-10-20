@@ -25,7 +25,7 @@ public class HttpClientUtil {
 		map.put("description", "12313");
 		map.put("tokenId", "123");
 		String localFile = "C:/Users/lenovo/Desktop/committee_info.zip";
-		HttpClientUtil.httpPost("http://127.0.0.1:8080/ssm/testUpload", localFile, map);
+		HttpClientUtil.httpPost("http://127.0.0.1:8081/ssm/testUpload", localFile, map);
 	}
 
 	public static CloseableHttpClient createDefault() {
@@ -65,7 +65,7 @@ public class HttpClientUtil {
 			System.out.println(statusLine);
 			System.out.println("-----");
 			System.out.println(EntityUtils.toString(entity));
-			System.out.println(entity.getContent());
+//			System.out.println(entity.getContent());
 			
 		} catch (IOException e) {
 			e.printStackTrace();
