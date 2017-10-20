@@ -226,9 +226,9 @@ public class MyFileReader2 {
 			String temp1 = "";
 			for (int i = 0; i < clumes.size(); i++) {
 				if (i == clumes.size() - 1) {
-					temp1 += clumes.get(i) + " varchar(" + length.get(i) + ") DEFAULT NULL)";
+					temp1 += "`"+clumes.get(i)+"`" + " varchar(" + length.get(i) + ") DEFAULT NULL)";
 				} else {
-					temp1 += clumes.get(i) + " varchar(" + length.get(i) + ") DEFAULT NULL ,";
+					temp1 += "`"+clumes.get(i)+"`" + " varchar(" + length.get(i) + ") DEFAULT NULL ,";
 				}
 			}
 			deleTempTable = temp0 + temp1;// + temp2
