@@ -46,13 +46,17 @@ public class User implements NameValuePair{
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", description=" + description + ", tokenId=" + tokenId + "]";
 	}
-	@Override
+
 	public String getValue() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	public void method(){
 		System.out.println("");
+	}
+
+	public void method1(){
+		System.out.println("111");
 	}
 	
 }
