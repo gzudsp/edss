@@ -58,5 +58,7 @@ public class User implements NameValuePair{
 	public void method1(){
 		System.out.println("111");
 	}
-	
+	public void method2(){
+        System.out.println("2222");
+    }
 }
