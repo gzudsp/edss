@@ -20,4 +20,8 @@ public class Message {
 	public String toString() {
 		return "Message [status=" + status + ", info=" + info + "]";
 	}
+
+	public void method(){
+		System.out.println("111");
+	}
 }
